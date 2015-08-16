@@ -14,6 +14,7 @@ public class VertexSet {
 		_set = new int[INIT_SIZE];
 		_sp=0;
 	}
+	/////   test change
 	
 	public VertexSet(VertexSet ot) {
 		_set = new int[INIT_SIZE];
