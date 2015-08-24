@@ -15,7 +15,7 @@ public class Clique_Tester {
 	public static boolean Debug = true;
 	public static int MAX_CLIQUE = 100000;
 	public static boolean Convert = true;
-        
+       // test yafim
 	
 	
 	public static void main(String[] args) {  // test1.csv_DG.txt  0.8 5 7
