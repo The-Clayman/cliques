@@ -9,7 +9,7 @@ import java.util.Vector;
 
 public class Clique_Tester {
 	public static int minQ = 6, maxQ=10;
-	public static double TH = 0.75;
+	public static double TH = 0.75;//0.75 && th=0.9727 E=10 , TH = 0.8644 E=1000, TH = 0.345935 E=100000
 	public static String in_file = "test1.csv";
 	public static String out_file = null;
 	public static boolean Debug = true;
@@ -28,7 +28,15 @@ public class Clique_Tester {
 			long t0= new Date().getTime();
 			Graph G = new Graph(in_file, TH);
 			long t1= new Date().getTime();
-			System.out.println("Init Graph: "+(t1-t0)+"  ms");	
+                        
+			System.out.println("Init Graph: "+(t1-t0)+"  ms");
+                        G.SaveGraph("GraphSave.ser");
+                        Graph G_Loaded = null;
+                        long t4= new Date().getTime();
+                        G_Loaded = Graph.LoadGraph("GraphSave.ser");
+                        long t5= new Date().getTime();
+                        System.out.println("Init Graph From a File: "+(t5-t4)+"  ms");
+                        G = G_Loaded;
 			//Vector<VertexSet> c1 = G.All_Cliques(maxQ);
 			
 		//	Vector<VertexSet> c2 = G.All_Cliques_DFS(2,maxQ);

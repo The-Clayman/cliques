@@ -1,13 +1,21 @@
 package clique_algo;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -15,7 +23,7 @@ import java.util.Vector;
  * @author Boaz
  *
  */
- class Graph {
+ class Graph implements Serializable{
 	 private String _file_name;
 	 private Vector <VertexSet> _V;
 	 private double _TH; // the threshold value
@@ -27,6 +35,19 @@ import java.util.Vector;
 		_V = new  Vector <VertexSet>();
 		 init();
 	 }
+         
+          void SaveGraph(String fileName){
+             File file = new File(fileName);
+             try{
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(this);
+            os.close();
+            fos.close();
+             }catch(IOException exeption){
+                 System.out.println("Could not save Graph to a file");
+             }
+         }
 	 
 	private void init() {
 		FileReader fr=null;
@@ -107,7 +128,7 @@ import java.util.Vector;
 	/*************** Clique Algorithms ******************/
 	/*Vector<VertexSet>  All_Cliques(int Q_size) {
 		Vector<VertexSet> ans = new Vector<VertexSet>();
-		Vector<VertexSet>C0 = allEdges(); // all edges – all cliques of size 2/
+		Vector<VertexSet>C0 = allEdges(); // all edges ï¿½ all cliques of size 2/
 		ans.addAll(C0);
 		for(int i=3;i<=Q_size;i++) {
 			Vector<VertexSet>C1 = allC(C0);
@@ -118,7 +139,7 @@ import java.util.Vector;
 	}
 	Vector<VertexSet>  All_Cliques(int min_Q_size, int max_Q_size) {
 		Vector<VertexSet> ans = new Vector<VertexSet>();
-		Vector<VertexSet> C0 = allEdges(), C1=null; // all edges – all cliques of size 2/
+		Vector<VertexSet> C0 = allEdges(), C1=null; // all edges ï¿½ all cliques of size 2/
 		for(int i=0;i<C0.size();i++) {
 			VertexSet curr = C0.elementAt(i);
 			C1 = All_Cliques_of_edge(curr, min_Q_size,  max_Q_size);
@@ -198,7 +219,7 @@ import java.util.Vector;
 	 * computes all the 2 cliques --> i.e. all the edges 
 	 * @return
 	 */
-	private Vector<VertexSet> allEdges() { // all edges – all cliques of size 2/
+	private Vector<VertexSet> allEdges() { // all edges ï¿½ all cliques of size 2/
 		Vector<VertexSet> ans = new Vector<VertexSet>();
 		for(int i=0;i<_V.size();i++) {
 			VertexSet curr = _V.elementAt(i);
@@ -222,7 +243,7 @@ import java.util.Vector;
 	Vector<VertexSet>  All_Cliques_DFS(int min_size, int max_size) {
 		Clique.init(this);
 		Vector<VertexSet> ans = new Vector<VertexSet>();
-		Vector<VertexSet>C0 = allEdges(); // all edges – all cliques of size 2/
+		Vector<VertexSet>C0 = allEdges(); // all edges ï¿½ all cliques of size 2/
 	//	ans.addAll(C0);
 		int len = C0.size();
 		//System.out.println("|E|= "+len);
@@ -245,7 +266,7 @@ import java.util.Vector;
 	 */
 	 public void All_Cliques_DFS(String out_file, int min_size, int max_size) {
 			Clique.init(this);
-			Vector<VertexSet>C0 = allEdges(); // all edges – all cliques of size 2/
+			Vector<VertexSet>C0 = allEdges(); // all edges ï¿½ all cliques of size 2/
 			int len = C0.size();
 			System.out.println("|E|= "+len);
 			int count = 0;
@@ -347,4 +368,25 @@ import java.util.Vector;
 			e.printStackTrace();
 		}
 	}
+        public static Graph LoadGraph(String fileName){
+             Graph ans = null;
+             File file = new File(fileName);
+             try {
+                 FileInputStream fis = new FileInputStream(file);
+                 ObjectInputStream is = new ObjectInputStream(fis);
+                 ans = (Graph) is.readObject();
+            is.close();
+            fis.close();
+             } catch (FileNotFoundException ex) {
+                 Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+             } catch (IOException ex) {
+                 Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+             } catch (ClassNotFoundException ex) {
+                 Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+             }
+             
+             
+             return ans;
+             
+         }
 }

@@ -1,11 +1,14 @@
 package clique_algo;
+
+import java.io.Serializable;
+
 /**
  * this class represents a simple ORDERD set of vertices. used by Cliques
  * The code was written in C like flavor - no java.util, no abstraction  
  * @author Boaz
  *
  */
-public class VertexSet {
+public class VertexSet implements Serializable{
 	private int[] _set = null;
 	private int _sp;
 	public final static int INIT_SIZE=20, INC=50;
