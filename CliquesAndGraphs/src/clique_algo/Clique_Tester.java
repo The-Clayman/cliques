@@ -8,8 +8,9 @@ import java.util.Date;
 import java.util.Vector;
 
 public class Clique_Tester {
-	public static int minQ = 6, maxQ=10;
-	public static double TH = 0.75;//0.75 && th=0.9727 E=10 , TH = 0.8644 E=1000, TH = 0.345935 E=100000
+//	public static int minQ = 6, maxQ=10;
+        	public static int minQ = 10, maxQ=20;
+	public static double TH = 0.6;//0.75 && th=0.9727 E=10 , TH = 0.8644 E=1000, TH = 0.345935 E=100000
 	public static String in_file = "test1.csv";
 	public static String out_file = null;
 	public static boolean Debug = true;
