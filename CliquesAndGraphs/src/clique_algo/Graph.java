@@ -30,6 +30,12 @@ class Graph implements Serializable {
     private double _TH; // the threshold value
     private int _E_size = 0;
     private boolean _mat_flag = true;
+    private int Max_Cliques_Size = -1;
+    private String OutFile = "";
+    
+    public String getFileName(){
+        return this.OutFile;
+    }
 
     Graph(String file, double th) {
         this._file_name = file;
@@ -305,6 +311,8 @@ class Graph implements Serializable {
 
         String ll = "0%   20%   40%   60%   80%   100%";
         int t = Math.max(1, len / ll.length());
+        int maxCliqueSize = 0;
+        Vector<Clique> MaxCliques = new Vector<Clique>();
         if (Clique_Tester.Debug) {
             System.out.println("Computing all cliques of size[" + min_size + "," + max_size + "] based on " + len + " edges graph, this may take a while");
             System.out.println(ll);
@@ -316,10 +324,15 @@ class Graph implements Serializable {
             VertexSet curr_edge = C0.elementAt(i);
             Clique edge = new Clique(curr_edge.at(0), curr_edge.at(1));
             Vector<Clique> C1 = allC_seed(edge, min_size, max_size);
+ 
+            
 
             for (int b = 0; b < C1.size(); b++) {
                 Clique c = C1.elementAt(b);
+                if (maxCliqueSize <= c.size()) maxCliqueSize = c.size();//***********************************************
+                
                 if (c.size() >= min_size) {
+                    
                     os.println(count + ", " + i + "," + c.size() + ", " + c.toFile());
                     count++;
                 }
@@ -334,6 +347,9 @@ class Graph implements Serializable {
         } // for
         System.out.println();
         System.out.println("num of Cliques = "+count);
+        System.out.println("Max Clique size = "+maxCliqueSize);
+        this.Max_Cliques_Size = maxCliqueSize;
+        this.OutFile = out_file;
 
         os.close();
         try {
@@ -343,6 +359,43 @@ class Graph implements Serializable {
             e.printStackTrace();
         }
 
+    }
+    public void getAllCliquesBySize(int size){
+        BufferedReader br = null;
+        String line = "";
+        FileWriter fw = null;
+       
+        try {
+            fw = new FileWriter(this.getFileName()+"_"+size+"_allCliqes");
+        } catch (IOException ex) {
+            Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         PrintWriter os = new PrintWriter(fw);
+        os.println("All Cliques by size "+size);
+        try {
+            br = new BufferedReader(new FileReader(this.getFileName()));
+            br.readLine();
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+				String[] parts = line.split(",");
+                                if (parts[2].equals(""+size)){
+                                os.println(line);
+                                }
+                                
+			}
+            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        os.close();
+        try {
+            br.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -425,4 +478,5 @@ class Graph implements Serializable {
         return ans;
 
     }
+    public int getMaxSize(){return this.Max_Cliques_Size;}
 }
