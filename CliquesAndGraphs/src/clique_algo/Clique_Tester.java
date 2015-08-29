@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.Vector;
 
 public class Clique_Tester {
-//	public static int minQ = 6, maxQ=10;
-        	public static int minQ = 22, maxQ=27;
+	public static int minQ = 20, maxQ=27;
+     //   	public static int minQ = 22, maxQ=27;
 	public static double TH = 0.74;//0.75 && th=0.9727 E=10 , TH = 0.8644 E=1000, TH = 0.345935 E=100000
 	public static String in_file = "test1.csv";
 	public static String out_file = null;
@@ -48,6 +48,7 @@ public class Clique_Tester {
 			G.All_Cliques_DFS(out_file,minQ,maxQ);
 			long t3= new Date().getTime();
 			System.out.println("Alg3: "+(t3-t2)+"  ms");
+                        G.getAllCliquesBySize(G.getMaxSize());
 			//write2file(c1);
 			//out_file = in_file+"_out2.txt";
 			//printAll(c2);
