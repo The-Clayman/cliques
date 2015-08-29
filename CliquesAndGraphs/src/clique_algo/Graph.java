@@ -333,6 +333,7 @@ class Graph implements Serializable {
             }
         } // for
         System.out.println();
+        System.out.println("num of Cliques = "+count);
 
         os.close();
         try {
@@ -366,12 +367,13 @@ class Graph implements Serializable {
             Clique curr = ans.elementAt(i);
             if (curr.size() < max_size) {
                 VertexSet Ni = curr.commonNi();
-     //           if (curr.size() + Ni.size() >= min_size) {
+                if (curr.size() + Ni.size() >= min_size) {
                     for (int a = 0; a < Ni.size(); a++) {
                         Clique c = new Clique(curr, Ni.at(a));
                         ans.add(c);
-       //             }
-                }
+                    }
+               }
+
             } else {
                 i = ans.size();
             } // speedup trick 
