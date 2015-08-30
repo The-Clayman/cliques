@@ -420,7 +420,7 @@ class Graph implements Serializable {
             Clique curr = ans.elementAt(i);
             if (curr.size() < max_size) {
                 VertexSet Ni = curr.commonNi();
-                if (curr.size() + Ni.size() >= min_size) {
+                if (curr.size() + Ni.size() >= min_size) {// added line
                     for (int a = 0; a < Ni.size(); a++) {
                         Clique c = new Clique(curr, Ni.at(a));
                         ans.add(c);
