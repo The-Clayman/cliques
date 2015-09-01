@@ -1,6 +1,8 @@
 # cliques
 assignment 0
 
+speed improved program on test1 branch 
+
 if-then statement was added to allC_seed function in Graph class to prevent checking superfluous cliques. Only cliques that have potential to grow to at least input minimum are being checked. Runtime reduced.
 difference in speed is mentioned in output log
 
