@@ -293,7 +293,7 @@ class Graph implements Serializable {
      * @param min_size
      * @param max_size
      */
-    public void All_Cliques_DFS(String out_file, int min_size, int max_size) {
+    public int All_Cliques_DFS(String out_file, int min_size, int max_size, boolean moreEfficient) {
         Clique.init(this);
         Vector<VertexSet> C0 = allEdges(); // all edges � all cliques of size 2/
         int len = C0.size();
@@ -323,7 +323,13 @@ class Graph implements Serializable {
 
             VertexSet curr_edge = C0.elementAt(i);
             Clique edge = new Clique(curr_edge.at(0), curr_edge.at(1));
-            Vector<Clique> C1 = allC_seed(edge, min_size, max_size);
+            Vector<Clique> C1 = null;
+            if (moreEfficient){
+                 C1 = allC_seedImproved(edge, min_size, max_size);
+            }
+            else{
+                C1 = allC_seed(edge, min_size, max_size);
+            }
  
             
 
@@ -358,7 +364,7 @@ class Graph implements Serializable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+           return count;
     }
     public void getAllCliquesBySize(int size){
         BufferedReader br = null;
@@ -366,7 +372,7 @@ class Graph implements Serializable {
         FileWriter fw = null;
        
         try {
-            fw = new FileWriter(this.getFileName()+"_"+size+"_allCliqes");
+            fw = new FileWriter(this.getFileName()+"_"+size+"_allMaxCliqes");
         } catch (IOException ex) {
             Logger.getLogger(Graph.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -412,6 +418,30 @@ class Graph implements Serializable {
     }
 
     Vector<Clique> allC_seed(Clique edge, int min_size, int max_size) {
+        Vector<Clique> ans = new Vector<Clique>();
+        ans.add(edge);
+        int i = 0;
+        //	int size = 2;
+        while (ans.size() > i) {
+            Clique curr = ans.elementAt(i);
+            if (curr.size() < max_size) {
+                VertexSet Ni = curr.commonNi();
+     //           if (curr.size() + Ni.size() >= min_size) {// added line
+                    for (int a = 0; a < Ni.size(); a++) {
+                        Clique c = new Clique(curr, Ni.at(a));
+                        ans.add(c);
+                    }
+     //          }
+
+            } else {
+                i = ans.size();
+            } // speedup trick 
+            i++;
+        }
+
+        return ans;
+    }
+     Vector<Clique> allC_seedImproved(Clique edge, int min_size, int max_size) {
         Vector<Clique> ans = new Vector<Clique>();
         ans.add(edge);
         int i = 0;

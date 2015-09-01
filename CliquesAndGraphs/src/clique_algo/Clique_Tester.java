@@ -1,11 +1,16 @@
 package clique_algo;
 
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Clique_Tester {
 	public static int minQ = 20, maxQ=27;
@@ -29,8 +34,17 @@ public class Clique_Tester {
 			long t0= new Date().getTime();
 			Graph G = new Graph(in_file, TH);
 			long t1= new Date().getTime();
+                        System.out.println("\nSmall Graph loading:");
+                        Graph small = new Graph(in_file, 0.9727);
+                        small.SaveGraph("smallGraph.ser");
+                        System.out.println("\nMedium Graph loading:");
+                        Graph medium = new Graph(in_file, 0.8644);
+                        medium.SaveGraph("mediumGraph.ser");
+                        System.out.println("\nBig Graph loading:");
+                        Graph big = new Graph(in_file, 0.345935);
+                        big.SaveGraph("bigGraph.ser");
                         
-			System.out.println("Init Graph: "+(t1-t0)+"  ms");
+			System.out.println("\nInit Graph: "+(t1-t0)+"  ms");
                         G.SaveGraph("GraphSave.ser");
                         Graph G_Loaded = null;
                         long t4= new Date().getTime();
@@ -44,11 +58,37 @@ public class Clique_Tester {
 			long t2= new Date().getTime();
 		//	System.out.println("Alg2: "+(t2-t1)+"  ms");
 			//printAll(c1);
-			if(out_file==null)  out_file = in_file+"_"+TH+"_"+minQ+"_"+maxQ+".csv";
-			G.All_Cliques_DFS(out_file,minQ,maxQ);
+			if(out_file==null)  out_file = in_file+"_"+TH+"_"+minQ+"_"+maxQ+"_"+"Boaz.csv";
+                        String outFileInproved = in_file+"_"+TH+"_"+minQ+"_"+maxQ+"_"+"improved.csv";
+			G.All_Cliques_DFS(out_file,minQ,maxQ,false);
 			long t3= new Date().getTime();
-			System.out.println("Alg3: "+(t3-t2)+"  ms");
+			System.out.println("Alg3: DFS Boaz: "+(t3-t2)+"  ms");
+                        long t6= new Date().getTime();
+                        G.All_Cliques_DFS(outFileInproved,minQ,maxQ,true);
+                        long t7= new Date().getTime();
+                        System.out.println("Alg3: DFS Improved: "+(t7-t6)+"  ms");
+                        System.out.println();
+                        System.out.println("Speed diffrence between Boaz and improved:  "+((t3-t2)-(t7-t6)) +"  ms");
                         G.getAllCliquesBySize(G.getMaxSize());
+                        File Boaz = new File(out_file);
+                        File improved = new File(outFileInproved);
+                        byte[] f1=null;
+                        byte[] f2=null;
+            try {
+                f1 = Files.readAllBytes(Boaz.toPath());
+                f2 = Files.readAllBytes(improved.toPath());
+            } catch (IOException ex) {
+                Logger.getLogger(Clique_Tester.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                       
+                        
+                        boolean isTwoEqual = Arrays.equals(f1,f2);
+                        if (isTwoEqual){
+                            System.out.println("Boaz DFS and Improved DFS have produced the same results");
+                        }
+                        else{
+                            System.out.println("Boaz DFS and Improved DFS haven't produced the same results");
+                        }
 			//write2file(c1);
 			//out_file = in_file+"_out2.txt";
 			//printAll(c2);
